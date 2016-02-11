@@ -23,6 +23,7 @@
 \documentclass[fleqn,10pt]{SelfArx} % Document font size and equations flushed left
 
 \usepackage[catalan]{babel} % Specify a different language here - english by default
+\usepackage[T1]{fontenc}
 
 \usepackage{lipsum} % Required to insert dummy text. To be removed otherwise
 
@@ -105,8 +106,7 @@ que ens disposem a implementar, us adjuntem les següents il·lustracions:\\
 \end{center}
 
 
-La il·lustració de l’esquerra mostra com un dels 4 LEDs in-
-frarojos del nostre sensor està emetent un feix de llum cap a
+La il·lustració de l’esquerra mostra com un dels 4 LEDs infrarojos del nostre sensor està emetent un feix de llum cap a
 l’exterior i, al no trobar cap obstacle al seu davant, aquest feix no es reflectit cap al fotodíode.\\
 
 Contràriament, la il·lustració de la dreta mostra com, en cas
@@ -156,7 +156,7 @@ Si ens hi fixem en la gràfica, veurem que, podem relacionar els valors de tensi
 
 \begin{itemize}
 
-	\item Si valor >= 1000 la tensió està per sobre de 3,2 volts i, llavors, no hi ha obstacle.
+	\item Si valor  >= 1000 la tensió està per sobre de 3,2 volts i, llavors, no hi ha obstacle.
 
 	\item Si valor < 1000 la tensió està per sota de 3,2 volts i, llavors, hi ha obstacle.
 
