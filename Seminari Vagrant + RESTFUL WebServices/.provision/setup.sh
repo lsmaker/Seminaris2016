@@ -13,20 +13,23 @@ sudo apt-get upgrade -y > /dev/null 2>&1;
 #Install build-essentials and base software (GIT & CURL)
 sudo apt-get install -y build-essential curl git;
 
-#Install Nginx and PHP5 (don't care about existing installations this command is
-#not destructive).
+#Install LEMP stack
 echo "Installing Nginx and PHP5...";
 sudo apt-get install -y nginx php5-fpm php5-mysql php5-cli > /dev/null 2>&1;
 
 #Change some vulnerable configurations on php.ini
 cp /tmp/provision/config_files/php.ini /etc/php5/fpm/php.ini
 
-#Check if MySQL should be installed. If present avoid running the installation
-#script.
-if [ ! -d /opt/mysql/server-5.6/ ]; then
-	#Install MySQL Server 5.6
-	bash /tmp/provision/install_mysql_server_5.6.sh
+MariaDB=`mysql --user=root --password=development -e "show databases;"`;
+if [ "$MariaDB" != "0" ]; then
+	export DEBIAN_FRONTEND=noninteractive
+	debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password password development'
+	debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password_again password development'
+	sudo apt-get install -y mariadb-server;
 fi
+
+#Create lsmaker database if not exists
+mysql --user=root --password=development -e "CREATE DATABASE IF NOT EXISTS lsmaker;";
 
 #Install composer
 echo "Installing composer..."
@@ -54,6 +57,7 @@ if [ ! -f /etc/nginx/default_host ]; then
 	ln -s /etc/nginx/sites-available/default_host /etc/nginx/sites-enabled/default_host;
 fi
 
-#Restart nginx service
+#Restart Nginx & MariaBD service
+sudo service mysql restart
 sudo service php5-fpm restart;
 sudo service nginx restart;

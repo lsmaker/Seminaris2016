@@ -17,3 +17,19 @@ $container['logger'] = function ($c) {
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::DEBUG));
     return $logger;
 };
+$container['db'] = function($c){
+
+	$conn = null;
+
+    $db_host = $c['settings']['db']['host'];  //Database Host
+    $db_name = $c['settings']['db']['database']; //Database Name
+    $db_user = $c['settings']['db']['user'];  //Database User
+    $user_pw = $c['settings']['db']['password'];  //Database Password
+
+    $con = new PDO('mysql:host='.$db_host.'; dbname='.$db_name, $db_user, $user_pw);
+    $con->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+    $con->exec("SET CHARACTER SET utf8");  //  return all sql requests as UTF-8
+
+	return $conn;
+
+};

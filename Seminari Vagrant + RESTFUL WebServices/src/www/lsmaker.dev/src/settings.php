@@ -8,6 +8,14 @@ return [
             'template_path' => __DIR__ . '/../templates/',
         ],
 
+		//Configure Database
+		'db' => [
+			'host' => "127.0.0.1",
+			'user' => "root",
+			'password' => 'development',
+			'database' => 'lsmaker',
+		],
+
         // Monolog settings
         'logger' => [
             'name' => 'slim-app',
