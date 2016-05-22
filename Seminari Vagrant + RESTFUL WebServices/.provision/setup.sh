@@ -36,10 +36,14 @@ if [ ! -d /var/www/lsmaker.dev ]; then
 	#Create Slim project base structure.
 	echo "Creating base Slim Framework structure...";
 	mkdir -p /var/www/;
-	rm -rf /var/www/html;
 	cd /var/www/;
 	composer create-project slim/slim-skeleton lsmaker.dev;
+else
+  cd /var/www/lsmaker.dev;
+  composer install;
 fi
+
+rm -rf /var/www/html;
 
 if [ ! -f /etc/nginx/default_host ]; then
 	#Re-configure Nginx hosts
