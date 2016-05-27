@@ -19,7 +19,7 @@ $container['logger'] = function ($c) {
 };
 $container['db'] = function($c){
 
-	$conn = null;
+	$con = null;
 
     $db_host = $c['settings']['db']['host'];  //Database Host
     $db_name = $c['settings']['db']['database']; //Database Name
@@ -30,6 +30,6 @@ $container['db'] = function($c){
     $con->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
     $con->exec("SET CHARACTER SET utf8");  //  return all sql requests as UTF-8
 
-	return $conn;
+	return $con;
 
 };

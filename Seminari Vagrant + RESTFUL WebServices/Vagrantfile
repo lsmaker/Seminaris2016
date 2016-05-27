@@ -6,6 +6,46 @@ required_plugins.each do |plugin|
   system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
 end
 
+#This scripts handles the problem of ignoring the log files on the
+#code repository. It will check for the required log files each time
+#the Vagrant VM is started and if they don't exist they will be automatically
+#created. However, if they exist, they will be CLEARED to save space on virtual
+#machine's disk.
+$script = <<SCRIPT
+  echo "Shutting down Nginx...";
+  sudo service nginx stop > /dev/null 2>&1;
+  echo "Creating/Clearing required log files..."
+  if [ ! -f /var/log/nginx/error.log ]; then
+    mkdir -p /var/log > /dev/null 2>&1;
+    touch /var/log/nginx/error.log > /dev/null 2>&1;
+  else
+    echo "" > /var/log/nginx/error.log;
+  fi
+
+  if [ ! -f /var/log/nginx/access.log ]; then
+    mkdir -p /var/log/nginx > /dev/null 2>&1;
+    touch /var/log/nginx/access.log > /dev/null 2>&1;
+  else 
+    echo "" > /var/log/nginx/access.log;
+  fi
+
+  if [ ! -f /var/log/lsmaker.error.log ]; then
+    mkdir -p /var/log > /dev/null 2>&1;
+    touch /var/log/lsmaker.error.log > /dev/null 2>&1;
+  else
+    echo "" > /var/log/lsmaker.error.log; 
+  fi
+
+  if [ ! -f /var/log/lsmaker.access.log ]; then
+    mkdir -p /var/log > /dev/null 2>&1;
+    touch /var/log/lsmaker.access.log > /dev/null 2>&1;
+  else
+    echo "" > /var/log/lsmaker.access.log;
+  fi
+  echo "Starting Nginx...";
+  sudo service nginx start;
+SCRIPT
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -71,6 +111,8 @@ Vagrant.configure(2) do |config|
 
   # View the documentation for the provider you are using for more
   # information on available options.
+  # View the documentation for the provider you are using for more
+  # information on available options.
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
   # such as FTP and Heroku are also available. See the documentation at
@@ -83,4 +125,6 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: "sudo bash /tmp/provision/setup.sh"
+   config.vm.provision "shell", inline: $script, run: "always"
+
 end
